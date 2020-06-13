@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<title>Marmara Uni Web Scrape</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+
+<style>
+    .w3-sidebar a {
+        font-family: "Roboto", sans-serif
+    }
+
+    body, h1, h2, h3, h4, h5, h6, .w3-wide {
+        font-family: "Montserrat", sans-serif;
+    }
+</style>
+<body class="w3-content" style="max-width:1200px">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+        <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+        <img src="https://upload.wikimedia.org/wikipedia/tr/7/70/Marmara_%C3%9Cniversitesi_logo.png" width="200px"/>
+    </div>
+    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+        <a href="http://localhost:8080/" class="w3-button w3-block w3-white w3-left-align">Main Page</a>
+        <a onclick="scrapeFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
+           id="scrapeButton">
+            Scrape Data <i class="fa fa-caret-down"></i>
+        </a>
+        <div id="scrapeAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+            <a th:href="@{/scrapeIMDBPage}" class="w3-bar-item w3-button">IMDB Film Scrape</a>
+            <a th:href="@{/scrapeWikiPage}" class="w3-bar-item w3-button">Wikipedia Film Scrape</a>
+        </div>
+        <a onclick="filmListFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align"
+           id="filmButton">
+            Film List <i class="fa fa-caret-down"></i>
+        </a>
+        <div id="filmAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+            <a th:href="@{/IMDBFilmList}" class="w3-bar-item w3-button">IMDB Film List</a>
+            <a th:href="@{/WikiFilmList}" class="w3-bar-item w3-button">Wikipedia Film List</a>
+            <a th:href="@{/film}" class="w3-bar-item w3-button">Find Film</a>
+        </div>
+    </div>
+</nav>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:250px">
+
+    <!-- Push down content on small screens -->
+    <div class="w3-hide-large" style="margin-top:83px"></div>
+
+    <!-- Top header her sayfa için değişik -->
+    <header class="w3-container w3-xlarge">
+        <p class="w3-center">IMDB Film Data</p>
+    </header>
+
+    <!-- DATA -->
+    <table id="imdbFilmTable" class="display" style="width:100%">
+        <thead>
+        <tr>
+            <th th:text="name"></th>
+            <th th:text="year"></th>
+            <th th:text="runtime"></th>
+            <th th:text="genre"></th>
+            <th th:text="imdbPoint"></th>
+            <th th:text="directors"></th>
+            <th th:text="stars"></th>
+            <th th:text="gross"></th>
+            <th th:text="information"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${imdbFilm.name}"></td>
+            <td th:text="${imdbFilm.year}"></td>
+            <td th:text="${imdbFilm.runtime}"></td>
+            <td th:text="${imdbFilm.genre}"></td>
+            <td th:text="${imdbFilm.imdbPoint}"></td>
+            <td th:text="${imdbFilm.directors}"></td>
+            <td th:text="${imdbFilm.stars}"></td>
+            <td th:text="${imdbFilm.gross}"></td>
+            <td th:text="${imdbFilm.information}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br><br><br>
+
+    <header class="w3-container w3-xlarge">
+        <p class="w3-center">Wikipedia Film Data</p>
+    </header>
+
+    <table id="wikiFilmTable" class="display" style="width:100%">
+        <thead>
+        <tr>
+            <th th:text="name"></th>
+            <th th:text="year"></th>
+            <th th:text="runtime"></th>
+            <th th:text="directors"></th>
+            <th th:text="stars"></th>
+            <th th:text="gross"></th>
+            <th th:text="information"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${wikiFilm.name}"></td>
+            <td th:text="${wikiFilm.year}"></td>
+            <td th:text="${wikiFilm.runtime}"></td>
+            <td th:text="${wikiFilm.directors}"></td>
+            <td th:text="${wikiFilm.stars}"></td>
+            <td th:text="${wikiFilm.gross}"></td>
+            <td th:text="${wikiFilm.information}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Footer -->
+
+    <div class="w3-white w3-center w3-padding-24">Created by <a
+            href="https://www.linkedin.com/in/yunus-emre-asil-a521a2170/" title="Yunus Emre ASIL" target="_blank"
+            class="w3-hover-opacity">Yunus Emre ASIL</a></div>
+
+    <!-- End page content -->
+</div>
+
+<!-- Newsletter Modal -->
+<script th:inline="javascript">
+
+    $(document).ready(function () {
+        $('#imdbFilmTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info":     false,
+            "searching": false,
+            "columnDefs": [
+                {
+                    "targets": [8],
+                    "visible": false
+                }
+            ]
+        });
+        $('#wikiFilmTable').DataTable({
+            "paging": false,
+            "ordering": false,
+            "info":     false,
+            "searching": false,
+            "columnDefs": [
+                {
+                    "targets": [6],
+                    "visible": false
+                }
+            ]
+        });
+        $('#imdbFilmTable tbody').on('click', 'tr', function () {
+            var table = $('#imdbFilmTable').DataTable();
+            var data = table.row( this ).data();
+            window.open(data[8])
+        });
+        $('#wikiFilmTable tbody').on('click', 'tr', function () {
+            var table = $('#wikiFilmTable').DataTable();
+            var data = table.row( this ).data();
+            window.open(data[6])
+        });
+    });
+
+    // Accordion
+    function filmListFunc() {
+        var x = document.getElementById("filmAcc");
+        if (x.className.indexOf("w3-show") === -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+
+    function scrapeFunc() {
+        var x = document.getElementById("scrapeAcc");
+        if (x.className.indexOf("w3-show") === -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+
+    // Click on the "Jeans" link on page load to open the accordion for demo purposes
+    document.getElementById("filmButton").click();
+    document.getElementById("scrapeButton").click();
+
+
+    // Open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

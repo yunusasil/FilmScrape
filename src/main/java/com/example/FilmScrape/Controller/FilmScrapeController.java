@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -37,7 +39,7 @@ public class FilmScrapeController {
 
     @GetMapping("/scrapeIMDBPage")
     public String scrapeIMDBPage(Model model){
-        model.addAttribute("isScraped", false);
+        model.addAttribute("isScraped", !IMDBFilmService.getIMDBFilmAll().isEmpty());
         return "IMDBScrapeData";
     }
 
@@ -50,7 +52,7 @@ public class FilmScrapeController {
 
     @GetMapping("/scrapeWikiPage")
     public String scrapeWikiPage(Model model){
-        model.addAttribute("isScrapedWiki", false);
+        model.addAttribute("isScrapedWiki", !wikiFilmService.getAllWikiFilms().isEmpty());
         return "WikiScrapeData";
     }
 
@@ -125,10 +127,12 @@ public class FilmScrapeController {
                 }
             }
         }
-        model.addAttribute("sameName", sameName);
-        model.addAttribute("sameRuntime", sameRuntime);
-        model.addAttribute("sameDirectors", sameDirectors);
-        model.addAttribute("sameYear", sameYear);
+        Map<String, Integer> analysisMap = new HashMap<>();
+        analysisMap.put("sameName", sameName);
+        analysisMap.put("sameRuntime", sameRuntime);
+        analysisMap.put("sameDirectors", sameDirectors);
+        analysisMap.put("sameYear", sameYear);
+        model.addAttribute("analysisMap", analysisMap);
         System.out.println(sameName + " " + sameRuntime + " " + sameDirectors + " " + sameYear);
         return "TotalAnalyse";
     }

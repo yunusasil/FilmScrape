@@ -12,6 +12,12 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+<script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 <style>
     .w3-sidebar a {
@@ -48,6 +54,7 @@
             <a th:href="@{/IMDBFilmList}" class="w3-bar-item w3-button">IMDB Film List</a>
             <a th:href="@{/WikiFilmList}" class="w3-bar-item w3-button">Wikipedia Film List</a>
             <a th:href="@{/film}" class="w3-bar-item w3-button">Find Film</a>
+            <a th:href="@{/film/total}" class="w3-bar-item w3-button">Total Analysis</a>
         </div>
     </div>
 </nav>
@@ -64,13 +71,9 @@
     </header>
 
     <!-- DATA -->
-    <p th:text="${sameName}"></p>
 
-    <p th:text="${sameRuntime}"></p>
-
-    <p th:text="${sameDirectors}"></p>
-
-    <p th:text="${sameYear}"></p>
+    <div id="container"
+         style="width: 750px; height: 600px; margin: 0 auto"></div>
 
     <!-- Footer -->
 
@@ -84,40 +87,46 @@
 <!-- Newsletter Modal -->
 <script th:inline="javascript">
 
-    $(document).ready(function () {
-        $('#imdbFilmTable').DataTable({
-            "paging": false,
-            "ordering": false,
-            "info":     false,
-            "searching": false,
-            "columnDefs": [
-                {
-                    "targets": [8],
-                    "visible": false
+    $(function(){
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Total Analysis'
+            },
+            subtitle: {
+                text: 'Total Analysis of Films'
+            },
+            xAxis: {
+                categories: [[${analysisMap.keySet()}]],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                max:1000,
+                title: {
+                    text: 'Total Films'
                 }
-            ]
-        });
-        $('#wikiFilmTable').DataTable({
-            "paging": false,
-            "ordering": false,
-            "info":     false,
-            "searching": false,
-            "columnDefs": [
-                {
-                    "targets": [6],
-                    "visible": false
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
                 }
-            ]
-        });
-        $('#imdbFilmTable tbody').on('click', 'tr', function () {
-            var table = $('#imdbFilmTable').DataTable();
-            var data = table.row( this ).data();
-            window.open(data[8])
-        });
-        $('#wikiFilmTable tbody').on('click', 'tr', function () {
-            var table = $('#wikiFilmTable').DataTable();
-            var data = table.row( this ).data();
-            window.open(data[6])
+            },
+            series: [{
+                name: 'Film',
+                data: [[${analysisMap.values()}]]
+            }]
         });
     });
 

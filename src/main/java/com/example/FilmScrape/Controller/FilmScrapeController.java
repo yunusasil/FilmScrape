@@ -133,7 +133,6 @@ public class FilmScrapeController {
         analysisMap.put("sameDirectors", sameDirectors);
         analysisMap.put("sameYear", sameYear);
         model.addAttribute("analysisMap", analysisMap);
-        System.out.println(sameName + " " + sameRuntime + " " + sameDirectors + " " + sameYear);
         return "TotalAnalyse";
     }
 }
